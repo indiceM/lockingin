@@ -20,104 +20,176 @@
   // -------- CSS --------
   const css = `
 .topbar {
-  position: sticky; top: 0; z-index: 40;
-  display: flex; gap: 6px;
-  padding: max(10px, env(safe-area-inset-top)) 14px 10px;
-  /* Fully opaque so each page's body background can't bleed through
-     and tint the bar a different color. Matches the dashboard's base
-     dark background so the bar feels continuous with the page chrome. */
-  background: #0a0a0b;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 40;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: max(18px, env(safe-area-inset-top)) 16px 18px;
+  background: rgba(10, 10, 11, 0.94);
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
-.topbar-pill {
-  flex: 1 1 0; min-width: 0;
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 11px;
+.topbar-logo {
+  width: 54px;
+  height: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: #F97316;
+  background: rgba(249,115,22,0.10);
+  border: 1px solid rgba(249,115,22,0.22);
+  border-radius: 18px;
+  box-shadow: 0 0 24px rgba(249,115,22,0.12);
+}
+.topbar-logo svg,
+.topbar-icon svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.topbar-nav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.topbar-item,
+.topbar-water-wrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+}
+.topbar-icon {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.62);
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
   text-decoration: none;
-  color: #FAFAFA;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s, border-color 0.15s;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
-.topbar-pill:hover { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.10); }
-.topbar-pill-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #6ee7b7; flex-shrink: 0;
+.topbar-icon:hover {
+  color: #FF8C32;
+  background: rgba(249,115,22,0.10);
+  border-color: rgba(249,115,22,0.24);
+  box-shadow: 0 0 12px rgba(255, 140, 50, 0.6);
+  transform: translateY(-1px);
 }
-.topbar-pill.warn .topbar-pill-dot { background: #fbbf24; }
-.topbar-pill.miss .topbar-pill-dot {
-  background: #ff8a8a;
-  animation: topbar-miss-pulse 1.6s ease-in-out infinite;
+.topbar-icon.active {
+  color: #F97316;
+  background: rgba(249,115,22,0.14);
+  border-color: rgba(249,115,22,0.30);
 }
+.topbar-icon::after {
+  content: attr(data-label);
+  position: absolute;
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  opacity: 0;
+  pointer-events: none;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: rgba(14,14,16,0.96);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #FAFAFA;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.topbar-icon:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+.topbar-pill-count {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  min-width: 22px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #F97316;
+  color: #fff;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  box-shadow: 0 4px 14px rgba(249,115,22,0.35);
+}
+.topbar-water-add {
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(249,115,22,0.36);
+  background: linear-gradient(180deg, #FF8C32 0%, #F97316 100%);
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 999px;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.10s, box-shadow 0.18s;
+  box-shadow: 0 4px 14px rgba(249,115,22,0.35);
+}
+.topbar-water-add:hover { box-shadow: 0 0 12px rgba(255, 140, 50, 0.6); }
+.topbar-water-add:active { transform: scale(0.94); }
+.topbar-water-add.flash { transform: scale(1.08); }
+.topbar-pill-dot,
+.topbar-pill-label { display: none; }
 @keyframes topbar-miss-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
   50%      { box-shadow: 0 0 0 5px rgba(239, 68, 68, 0); }
 }
-.topbar-pill-label {
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-  flex-shrink: 0;
-}
-.topbar-pill-count {
-  margin-left: auto;
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 12px; font-weight: 700;
-  color: #FAFAFA;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.topbar-water-wrap {
-  flex: 1 1 0; min-width: 0;
-  display: flex;
-}
-.topbar-water-pill {
-  flex: 1; min-width: 0;
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 8px 12px;
-  background: rgba(125, 211, 252, 0.07);
-  border: 1px solid rgba(125, 211, 252, 0.14);
-  border-right: none;
-  border-radius: 11px 0 0 11px;
-  text-decoration: none;
-  color: #FAFAFA;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s;
-}
-.topbar-water-pill:hover { background: rgba(125, 211, 252, 0.12); }
-.topbar-water-pill .topbar-pill-dot { background: #7DD3FC; }
-.topbar-water-add {
-  flex: 0 0 auto;
-  width: 38px;
-  border: 1px solid rgba(125, 211, 252, 0.14);
-  background: linear-gradient(180deg, rgba(125, 211, 252, 0.22), rgba(110, 231, 183, 0.22));
-  color: #FFFFFF;
-  font-family: inherit; font-size: 17px; font-weight: 700;
-  cursor: pointer;
-  border-radius: 0 11px 11px 0;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s, transform 0.10s;
-}
-.topbar-water-add:hover {
-  background: linear-gradient(180deg, rgba(125, 211, 252, 0.34), rgba(110, 231, 183, 0.34));
-}
-.topbar-water-add:active { transform: scale(0.94); }
-.topbar-water-add.flash {
-  background: linear-gradient(180deg, rgba(125, 211, 252, 0.65), rgba(110, 231, 183, 0.65));
-}
 
-@media (max-width: 480px) {
-  .topbar { padding-left: 10px; padding-right: 10px; gap: 4px; }
-  .topbar-pill, .topbar-water-pill { padding: 7px 9px; gap: 5px; }
-  .topbar-pill-label { font-size: 9px; letter-spacing: 0.10em; }
-  .topbar-pill-count { font-size: 11px; }
-  .topbar-water-add { width: 32px; font-size: 16px; }
-}
-@media (max-width: 380px) {
-  .topbar-pill-label { display: none; }
+@media (max-width: 720px) {
+  .topbar {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .topbar-logo,
+  .topbar-item,
+  .topbar-water-wrap,
+  .topbar-icon {
+    width: 48px;
+    height: 48px;
+  }
+  .topbar-icon svg,
+  .topbar-logo svg { width: 22px; height: 22px; }
 }
 
 /* === Global mobile lockdown ===
@@ -167,36 +239,53 @@ body.topbar-modal-open {
 `;
 
   // -------- HTML --------
+  const icons = {
+    logo: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7.5 4.5v9L12 21l-7.5-4.5v-9L12 3z"/><path d="M12 8v8M8 10.5l4-2.5 4 2.5"/></svg>',
+    dashboard: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+    goals: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/></svg>',
+    stack: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z"/><path d="M4 12l8 4.5 8-4.5"/><path d="M4 16.5l8 4.5 8-4.5"/></svg>',
+    water: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z"/></svg>',
+    gym: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/><path d="M9 9v6M15 9v6"/></svg>',
+    finance: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18a2 2 0 0 1 2 2v2"/><path d="M4 7.5v9A2.5 2.5 0 0 0 6.5 19H20V9H6.5A2.5 2.5 0 0 1 4 6.5"/><path d="M17 14h.01"/></svg>'
+  };
   const html = `
-<header class="topbar" id="topbar" role="navigation" aria-label="Quick stats">
-  <a href="index.html" class="topbar-pill" id="topbarGoals">
-    <span class="topbar-pill-dot"></span>
-    <span class="topbar-pill-label">GOALS</span>
-    <span class="topbar-pill-count" id="topbarGoalsCount">—/—</span>
-  </a>
-  <a href="health.html" class="topbar-pill" id="topbarStack">
-    <span class="topbar-pill-dot"></span>
-    <span class="topbar-pill-label">STACK</span>
-    <span class="topbar-pill-count" id="topbarStackCount">—/—</span>
-  </a>
-  <div class="topbar-water-wrap">
-    <a href="health.html#water" class="topbar-water-pill" id="topbarWater">
-      <span class="topbar-pill-dot"></span>
-      <span class="topbar-pill-label">WATER</span>
-      <span class="topbar-pill-count" id="topbarWaterCount">—/—</span>
+<header class="topbar" id="topbar" role="navigation" aria-label="Primary navigation">
+  <div class="topbar-logo" aria-hidden="true">${icons.logo}</div>
+  <nav class="topbar-nav">
+    <a href="index.html" class="topbar-item topbar-icon" id="topbarDashboard" data-page="dashboard" data-label="Dashboard" aria-label="Dashboard">${icons.dashboard}</a>
+    <a href="index.html" class="topbar-item topbar-icon" id="topbarGoals" data-page="goals" data-label="Goals" aria-label="Goals">
+      ${icons.goals}
+      <span class="topbar-pill-count" id="topbarGoalsCount">—</span>
     </a>
-    <button class="topbar-water-add" id="topbarWaterAdd" aria-label="Log one drink" type="button">+</button>
-  </div>
-  <a href="gym.html" class="topbar-pill" id="topbarGym">
-    <span class="topbar-pill-dot"></span>
-    <span class="topbar-pill-label">GYM</span>
-  </a>
-  <a href="finance.html" class="topbar-pill" id="topbarFinance">
-    <span class="topbar-pill-dot"></span>
-    <span class="topbar-pill-label">FINANCE</span>
-  </a>
+    <a href="health.html" class="topbar-item topbar-icon" id="topbarStack" data-page="stack" data-label="Stack" aria-label="Stack">
+      ${icons.stack}
+      <span class="topbar-pill-count" id="topbarStackCount">—</span>
+    </a>
+    <div class="topbar-water-wrap">
+      <a href="health.html#water" class="topbar-icon" id="topbarWater" data-page="water" data-label="Water" aria-label="Water">
+        ${icons.water}
+        <span class="topbar-pill-count" id="topbarWaterCount">—</span>
+      </a>
+      <button class="topbar-water-add" id="topbarWaterAdd" aria-label="Log one drink" type="button">+</button>
+    </div>
+    <a href="gym.html" class="topbar-item topbar-icon" id="topbarGym" data-page="gym" data-label="Gym" aria-label="Gym">${icons.gym}</a>
+    <a href="finance.html" class="topbar-item topbar-icon" id="topbarFinance" data-page="finance" data-label="Finance" aria-label="Finance">${icons.finance}</a>
+  </nav>
 </header>
 `;
+
+  function setActiveNav() {
+    const path = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    const hash = window.location.hash;
+    const activePage = path === 'finance.html' ? 'finance'
+      : path === 'gym.html' ? 'gym'
+      : path === 'health.html' && hash === '#water' ? 'water'
+      : path === 'health.html' ? 'stack'
+      : 'dashboard';
+    document.querySelectorAll('.topbar-icon[data-page]').forEach(el => {
+      el.classList.toggle('active', el.dataset.page === activePage);
+    });
+  }
 
   function injectStyleAndHTML() {
     if (document.getElementById('topbar')) return; // already injected
@@ -300,11 +389,11 @@ body.topbar-modal-open {
     const w = getWaterProgress();
 
     document.getElementById('topbarGoalsCount').textContent =
-      g.total ? g.done + '/' + g.total : '0/0';
+      g.total ? g.done + '/' + g.total : '0';
     document.getElementById('topbarStackCount').textContent =
-      s.total ? s.done + '/' + s.total : '0/0';
+      s.total ? s.done + '/' + s.total : '0';
     document.getElementById('topbarWaterCount').textContent =
-      w.total ? w.done + '/' + w.total : '0/0';
+      w.total ? w.done + '/' + w.total : '0';
 
     setPillStatus(goalsEl, classifyStatus(g.done, g.total));
     setPillStatus(stackEl, classifyStatus(s.done, s.total));
@@ -411,6 +500,8 @@ body.topbar-modal-open {
   // -------- Boot --------
   function boot() {
     injectStyleAndHTML();
+    setActiveNav();
+    window.addEventListener('hashchange', setActiveNav);
     const btn = document.getElementById('topbarWaterAdd');
     if (btn) btn.addEventListener('click', (e) => { e.preventDefault(); addWater(); });
     render();
