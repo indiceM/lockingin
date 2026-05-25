@@ -1,0 +1,23 @@
+{
+  "name": "My Dashboard",
+  "short_name": "Dashboard",
+  "description": "Personal dashboard — goals, gym, health, finance, water",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#050506",
+  "theme_color": "#050506",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%23050506'/><text y='130' x='96' text-anchor='middle' font-size='110' font-family='system-ui'>📊</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23050506'/><text y='360' x='256' text-anchor='middle' font-size='300' font-family='system-ui'>📊</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    }
+  ]
+}
